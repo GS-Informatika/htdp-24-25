@@ -27,8 +27,8 @@
 
 
 ;; Binární operace - 2 argumenty
-(define value1 #true)
-(define value2 #true)
+(define left #true)
+(define right #true)
 
 ;; or - #true pokud alespoň 1 argument je #true
 #;(or left right)
@@ -61,9 +61,9 @@
 ;; Booleany využíváme při rozhodování - větvení kódu (branching)
 ;; Výraz if - podmíněný výraz
 
-(define sunny #true)
-(define accessory
-  (if sunny
+(define SUNNY #true)
+(define ACCESSORY
+  (if SUNNY
       "sunglasses" ; Pokud je sunny #true výraz (if ...) se vyhodnotí na "sunglasses"
       "umbrella")) ; Pokud je sunny #false výraz (if ...) se vyhodnotí na "umbrella"
 
