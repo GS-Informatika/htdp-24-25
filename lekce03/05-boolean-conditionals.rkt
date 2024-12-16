@@ -1,71 +1,16 @@
 ;; The first three lines of this file were inserted by DrRacket. They record metadata
 ;; about the language level of this file in a form that our tools can easily process.
-#reader(lib "htdp-beginner-reader.ss" "lang")((modname 03-booleans) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
-;; Ukazovali jsme si aritmetiku následujících typů
-;; - Number
-;; - String
-;; - Image
-
-
-;; Nyní se podíváme na datový typ Boolean
-#;#true
-#;#false
-
-;; S Booleany jsme se již setkali ve funkci
-#;(string->number "non-numeric string")
-;; která vrátí
-#; #false
-;; pro argumenty které nelze převést
-
-
-;; Operace s booleany
-
-;; Unární operace - 1 argument
-
-;; not - převrací hodnotu argumentu
-#;(not #true) #;#false
-
-
-;; Binární operace - 2 argumenty
-(define left #true)
-(define right #true)
-
-;; or - #true pokud alespoň 1 argument je #true
-#;(or left right)
-
-;; and - #true pokud všechny argumenty jsou #true
-#;(and left right)
-
-;; (or ...) a (and ...) jsou short-circuit operace
-;; (podléhají zkrácenému vyhodnocování - McCarthy evaluation).
-;; Vyhodnotí se pouze tolik výrazů, kolik je potřeba na
-;; určení výsledku.
-
-;; To je velmi podstatné pro tzv. vedlejší efekty.
-#;(and #false (error "no"))
-
-;; V imperativních jazycích se řeší pomocí sekvenčních bodů.
-
-
-
-;; Booleany lze získat operacemi na jiných datových typech,
-;; například porovnáváním čísel
-#;(< 1 2) #;#true
-#;(< 5 1) #;#false
-#;(= 4 4) #;#true
-#;(>= 10 5) #;true
-#;(>= 5 5) #;true
-#;(>= 4 5) #;false
-
-
+#reader(lib "htdp-beginner-reader.ss" "lang")((modname 05-boolean-conditionals) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
 ;; Booleany využíváme při rozhodování - větvení kódu (branching)
 ;; Výraz if - podmíněný výraz
 
 (define SUNNY #true)
 (define ACCESSORY
   (if SUNNY
-      "sunglasses" ; Pokud je sunny #true výraz (if ...) se vyhodnotí na "sunglasses"
-      "umbrella")) ; Pokud je sunny #false výraz (if ...) se vyhodnotí na "umbrella"
+      "sunglasses" ; Pokud je sunny #true ->
+      ;; výraz (if ...) se vyhodnotí na "sunglasses"
+      "umbrella")) ; Pokud je sunny #false ->
+      ;; výraz (if ...) se vyhodnotí na "umbrella"
 
 ;; Výraz if má obecně zápis
 #;(if VýrazBool VýrazTrue VýrazFalse)
@@ -76,7 +21,26 @@
       "warm"
       "not warm"))
 
-;; Občas potřebujeme porovnat více možností - vnořování if výrazů není příliš přehledné!
+
+;; --- CVIČENÍ ---
+; Pracujeme s obrázky - potřebujeme modul
+(require 2htdp/image)
+
+;  Definujte funkci
+#; image-classify
+;; která zkonzumuje obrázek a vytvoří
+;;  - string "tall" pokud je výška obrázku větší
+;;    než šířka obrázku
+;;  - string "wide" pokud je šířka obrázku větší
+;;    než výška obrázku
+;;  - string "square" pokud je šířka obrázku
+;;    stejná jako výška obrázku.
+
+
+
+
+  
+;; Vnořování if výrazů není příliš přehledné.
 (define (signum-bad x)
   (if (> x 0)
       1
@@ -101,15 +65,23 @@
 
 ;; --- CVIČENÍ ---
 
-(require 2htdp/image)
+;  Definujte funkci
+#; image-classify.v2
+;; (z předchozího cvičení) pomocí klauzule cond.
+
+
+
+
+
+; Pracujeme s animací - potřebujeme modul
 (require 2htdp/universe)
 ;; V minulých lekcích jsme si ukázali funkci
 #;(animate ...)
 
 ;; Animovali jsme volný pád tečky - funkce generující:
-#;(define (picture-of-dot param)
+#;(define (picture-of-dot time)
   (place-image (circle 5 "solid" "red")
-               50 (sqr param)
+               50 (sqr time)
                (empty-scene 100 300)))
 
 ;; Vaším úkolem bude vytvořit stejnou animaci, odehrávající se na plátně o šířce WIDTH

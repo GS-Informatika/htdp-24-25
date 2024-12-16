@@ -155,6 +155,6 @@ může mít i více řádků...
 
 ;; Mimo overlay můžeme také použít funkci place-image, kde specifikujeme
 ;; souřadnice na které se má Image vložit.
-#;(place-image (circle 5 "solid" "green")
+(place-image (circle 5 "solid" "green")
                50 90
                (empty-scene 100 100))
