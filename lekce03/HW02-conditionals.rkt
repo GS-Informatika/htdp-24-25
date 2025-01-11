@@ -3,8 +3,7 @@
 #reader(lib "htdp-beginner-reader.ss" "lang")((modname HW02-conditionals) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
 (require 2htdp/image)
 (require 2htdp/universe)
-; Na předchozích lekcích jsme animovali volný pád tečky
-; pomocí následující funkce:
+; Na předchozích lekcích jsme animovali volný pád tečky pomocí funkce:
 (define (picture-of-dot param)
   (place-image (circle 5 "solid" "red")
                50 (sqr param)
@@ -19,22 +18,39 @@
 ; Jakmile se ale kroužek dotkne spodního okraje scény,
 ; zastaví se a nebude se dále pohybovat.
 
-; Doplňte funkci circle-height (která určuje souřadnici y v animaci).
+; Doplňte funkci circle-y (která určuje souřadnici y v animaci).
 
-(require 2htdp/image)
 (define WIDTH 100)
 (define HEIGHT 300)
 (define CIRCLE (circle 5 "solid" "red" ))
 (define SCENE (empty-scene WIDTH HEIGHT))
 
-(define (circle-height time)
-  ...)
+(define (circle-y time)
+  ...) ; ZDE DOPLŇTE
 
 (define (falling-dot-picture time)
   (place-image
    CIRCLE
    (/ WIDTH 2)
-   (circle-height time)
+   (circle-y time)
    SCENE))
 
 #;(animate falling-dot-picture)
+
+
+; Napište funkci circle-y.v2, která bude určovat souřadnici kolečka y v animaci
+; tak, že se kolečko bude pohybovat stejnou rychlostí nejprve
+; 1) do středu scény, kde se na chvíli zastaví
+; 2) na spodní okraj scény, kde se zastaví
+
+(define (circle-y.v2 time)
+  ...) ; ZDE DOPLŇTE
+
+(define (falling-dot-picture.v2 time)
+  (place-image
+   CIRCLE
+   (/ WIDTH 2)
+   (circle-y.v2 time)
+   SCENE))
+
+#;(animate falling-dot-picture.v2)
