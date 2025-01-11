@@ -1,6 +1,6 @@
 ;; The first three lines of this file were inserted by DrRacket. They record metadata
 ;; about the language level of this file in a form that our tools can easily process.
-#reader(lib "htdp-beginner-reader.ss" "lang")((modname 07-designing-data) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+#reader(lib "htdp-beginner-reader.ss" "lang")((modname 08-designing-data) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
 ;; -- O designování software a programování --
 
 ;; K programování je potřeba mistrovství v mnoha
@@ -47,6 +47,11 @@
 
 
 
+;; Domácí úkol:
+
+; Popište, co je "year 2000 problem" ("y2k problem").
+; Proč vznikl? Co byly jeho důsledky?
+
 
 ;; ------- Designování dat -------
 
@@ -54,12 +59,22 @@
 ;; INFORMACE ----> DATA ----> VÝPOČET ----> DATA ----> INFORMACE
 
 ;; Informace jsou prvky v doméně se kterou pracujeme,
-;; data jsou naše reprezentace informací
+;; pochází z "reality" (domény programu)
+
+;; Data jsou naše reprezentace informací v
+;; programovacím jazyce:
+;;  - funkce
+;;  - struktury
+;;  - hodnoty
 
 ;; Informace nejprve převádíme do dat (reprezentace), data která
 ;; jsou výsledkem výpočtu pak převádíme zpět do informací
 ;; (interpretace)
+
 ;; Doména --reprezentace--> Program --inerpretace--> Doména
+
+;; Výhoda BSL a DrRacket - převod z informace do dat je většinou
+;; triviální
 
 
 ;; Diskuze - jaký význam má tento predikát?
@@ -68,6 +83,9 @@
 
 ;; Bez znalosti na které doméně operuje nedokážeme určit.
 ;; Je třeba jej popsat!
+
+
+
 
 ;; Jedná se o podmínku pro klasifikaci lehké čtyřkolky
 ;; podle koňské síly
@@ -81,12 +99,17 @@
 ;; 2) říkají, jak daná data vytvořit (reprezentovat) v programu
 ;; 3) říkají, jak daná data interpretovat (převést je na informaci)
 
-;; Typicky jsou tyto komentáře v angličtině.
-
+;; Typicky jsou tyto komentáře v angličtině (není to ale nutnost).
 ;; Ukázka:
 
 ; Temperature is a Number
 ; Represents temperature in degrees Celsius
+
+
+;; Datový typ je v BSL forma kontraktu - hodnoty Temperature
+;; za běhu programu nelze odlišit od jiných čísel,
+;; při psaní/čtení programu ale dodává informaci a kontext a
+;; říká nám, jak hodnoty používat.
 
 
 ;; ------ Cvičení ------
@@ -97,8 +120,16 @@
 
 
 
-
 ;; 2) Rozmyslete jestli je datový typ Temperature definovaný korektně.
 ;;    Najděte na internetu fyzikální limit pro teploty. Mohou programy
 ;;    používající definici Temperature výše reprezentovat teploty
 ;;    které nejsou fyzikálně možné?
+
+
+
+
+;; ------ -------  ------
+
+;; Podmínky (např. musí být větší než -273.15)
+;; na datové typy si ukážeme později, prozatím budeme pracovat
+;; s nedokonalými typy

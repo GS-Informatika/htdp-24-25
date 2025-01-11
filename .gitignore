@@ -1,2 +1,4 @@
 *.bak
 *.rkt~
+
+*.solution.rkt
