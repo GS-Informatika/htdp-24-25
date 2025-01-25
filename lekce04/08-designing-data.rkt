@@ -102,8 +102,12 @@
 ;; Typicky jsou tyto komentáře v angličtině (není to ale nutnost).
 ;; Ukázka:
 
+
+
 ; Temperature is a Number
 ; Represents temperature in degrees Celsius
+
+
 
 
 ;; Datový typ je v BSL forma kontraktu - hodnoty Temperature
@@ -117,6 +121,9 @@
 ;; 1) Zaveďte datovou definici pro typ 1String - String který má
 ;;    právě 1 znak.
 
+
+; 1String is a String
+; String with exactly 1 character
 
 
 

@@ -15,22 +15,33 @@
 ; Ve všech ostatních případech funkce vrátí hodnotu #false
 ; Predikáty ke klasifikaci stringů hledejte v dokumentaci (F1)
 
+(define (classify-string s)
+  (cond [(string-lower-case? s) "lowercase"]
+        [(string-upper-case? s) "uppercase"]
+        [(string-numeric? s) "numeric"]
+        [else #false]))
 
 
-
-
+ 
 (require 2htdp/image)
 ; Cvičení 2
 ; Definujte predikáty image-wide? a image-tall?
 
+(define (image-wide? i)
+  (> (image-width i) (image-height i)))
 
-
+(define (image-tall? i)
+  (> (image-height i) (image-width i)))
 
 
 ; Cvičení 3
 ; Definujte funkci (inside? image x y) která určí,
 ; jestli je daný bod uvnitř obrázku.
 
-
+(define (inside? i x y)
+  (and (>= x 0)
+       (>= y 0)
+       (< x (image-width i))
+       (< y (image-height i))))
 
 

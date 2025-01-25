@@ -1,6 +1,6 @@
 ;; The first three lines of this file were inserted by DrRacket. They record metadata
 ;; about the language level of this file in a form that our tools can easily process.
-#reader(lib "htdp-beginner-reader.ss" "lang")((modname HW01-funkce-a-konstanty) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+#reader(lib "htdp-beginner-reader.ss" "lang")((modname HW01-functions-and-constants) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
 ;; Domácí úkol
 
 ; Vlastník kina v malém městě vás poprosil o přípravu
@@ -67,6 +67,8 @@
 ; ale za každého diváka je nyní cena 80 Kč.
 
 ; Modifikujte obě implementace (váš kód i funkci profit-magic),
-; upravené verze nazvěte například
-#;profit-magic.v2
+; (upravené verze nazvěte například
+#;  profit-magic.v2
+;                   )
 ; a opět vyzkoušejte, jestli dávají stejné výsledky.
+; Která implementace byla jednodušší upravit? Okomentujte proč:

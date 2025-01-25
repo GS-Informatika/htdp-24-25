@@ -22,21 +22,28 @@
 
 (define ABSOLUTE-ZERO-CELSIUS 273.15)
 
+; TemperatureCelsius -> TemperatureKelvin
 (define (C->K celsius)
   (+ celsius ABSOLUTE-ZERO-CELSIUS))
 
+; TemperatureKelvin -> TemperatureCelsius
 (define (K->C kelvin)
   (- kelvin ABSOLUTE-ZERO-CELSIUS))
 
+; TemperatureCelsius -> TemperatureFahrenheit
 (define (C->F celsius)
   (+ 32 (* 9/5 celsius)))
 
+; TemperatureFahrenheit -> TemperatureCelsius
 (define (F->C farenheit)
   (* 5/9 (- farenheit 32)))
 
+
+; TemperatureKelvin -> TemperatureFahrenheit
 (define (K->F kelvin)
   (C->F (K->C kelvin)))
 
+; TemperatureFahrenheit -> TemperatureKelvin
 (define (F->K farenheit)
   (C->K (F->C farenheit)))
 
@@ -81,7 +88,7 @@
 ;; vytvoří boolean
 ; String Number -> Boolean
 (define (nth-letter-digit? s n)
-  (numeric? (string-ith s n)))
+  (string-numeric? (string-ith s n)))
 
 
 ;; V signaturách samozřejmě můžeme používat
@@ -100,6 +107,8 @@
 (define (cm->m cm)
   (/ cm 100))
 
+
+
 ; Meter -> Centimeter
 (define (m->cm m)
   (* m 100))
@@ -117,6 +126,4 @@
 ; funkce, se signaturou
 
 ; Number String Image -> Image
-
-
 

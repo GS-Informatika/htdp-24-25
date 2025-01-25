@@ -38,7 +38,7 @@
 ; String Number Image -> Image
 ; Inserts text of text-size to image img.
 (define (add-text text text-size img)
-  (empty-scene 100 100))
+  ...)
 
 
 ; 3) Ukažme použití funkce na příkladech
