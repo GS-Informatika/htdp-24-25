@@ -1,6 +1,6 @@
 ;; The first three lines of this file were inserted by DrRacket. They record metadata
 ;; about the language level of this file in a form that our tools can easily process.
-#reader(lib "htdp-beginner-reader.ss" "lang")((modname 14-structural-types) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+#reader(lib "htdp-beginner-reader.ss" "lang")((modname 15-structural-types) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
 ;; Strukturní (kompozitní) typy
 
 ;; Informaci jsme reprezentovali pomocí dat
@@ -212,3 +212,11 @@
        (player-rank p1) ...
        (player-username p2) ...
        (player-rank p1) ...))
+
+
+;; Cvičení
+;; Vytvořte templaty pro strukturní typy
+;; zavedené výše - song, blood-donor, pet, CD, sweater.
+
+
+
