@@ -100,23 +100,26 @@
   (named-person-count lop "James"))
 
 
-
 ;; Cvičení:
 ;;   Zkuste vymyslet jak provést abstrakci následujících funkcí?
 
-; List-of-Strings -> Boolean
+; List-of-String -> Boolean
 ; Checks if list contains string with exactly 10 letters
+
 (define (contains-10-letter-string? l)
   (cond [(empty? l) #f]
-        [(= (length (first l)) 10) #t]
-        [else (contains-10-letter-string? (rest l))]))
+        [(cons? l) (if (= (string-length (first l)) 10)
+                       #t
+                       (contains-10-letter-string? (rest l)))]))
 
-; List-of-Strings -> Boolean
+; List-of-String -> Boolean
 ; Checks if list contains string with exactly 10 letters
 (define (contains-8-letter-string? l)
   (cond [(empty? l) #f]
-        [(= (length (first l)) 8) #t]
-        [else (contains-8-letter-string? (rest l))]))
+        [(cons? l) (if (= (string-length (first l)) 8)
+                       #t
+                       (contains-8-letter-string? (rest l)))]))
+
 
 
 

@@ -10,20 +10,28 @@
 ; List-of-Numbers -> List-of-Numbers
 (define (add5/list l)
   (cond [(empty? l) '()]
-        [else (cons (+ (first l) 5)
+        [(cons? l) (cons (+ (first l) 5)
                     (add5/list (rest l)))]))
 
 ; List-of-Numbers -> List-of-Numbers
 (define (add8/list l)
   (cond [(empty? l) '()]
-        [else (cons (+ (first l) 8)
+        [(cons? l) (cons (+ (first l) 8)
                     (add8/list (rest l)))]))
 
 ; List-of-Numbers -> List-of-Numbers
 (define (multiply5/list l)
   (cond [(empty? l) '()]
-        [else (cons (* (first l) 5)
+        [(cons? l) (cons (* (first l) 5)
                     (multiply5/list (rest l)))]))
+
+
+
+
+
+
+
+
 
 
 
@@ -32,39 +40,74 @@
 ;; operace jako hodnoty.
 
 ; Operation is one of
-; - 'multiply
-; - 'add
+; - "multiply"
+; - "add"
 
-; List-of-Numbers Operation Number -> List-of-Numbers
+; Operation List-of-Numbers Number -> List-of-Numbers
 (define (operation/list op l num)
   (cond [(empty? l) '()]
-        [(eq? op 'multiply) (cons (* (first l) num)
-                                  (operation/list op
-                                                  (rest l)
-                                                  num))]
-        [(eq? op 'add) (cons (+ (first l) num)
-                             (operation/list op
-                                             (rest l)
-                                             num))]))
+        [(cons? l) (cond 
+                     [(string=? op "multiply")
+                      (cons (* (first l) num)
+                            (operation/list op
+                                            (rest l)
+                                            num))]
+                     [(string=? op "add")
+                      (cons (+ (first l) num)
+                            (operation/list op
+                                            (rest l)
+                                            num))])]))
 
 ;; Zdá se ale, že jsme jen "přesunuli" opakování dovnitř funkce!
 ;; Je sice "na jednom místě", ale není to ten nejlepší přístup!
+;; Je to navíc docela rozsáhlá funkce - lepší by přece bylo:
 
-;; Zkusme to ještě jednou! Definujme funkci ve tvaru
+; List-of-Numbers Number -> List-of-Numbers
+(define (add/list l n)
+  (cond [(empty? l) '()]
+        [(cons? l) (cons (+ (first l) n)
+                         (add/list (rest l) n))]))
+
+; List-of-Numbers Number -> List-of-Numbers
+(define (multiply/list l n)
+  (cond [(empty? l) '()]
+        [(cons? l) (cons (* (first l) n)
+                         (add/list (rest l) n))]))
+
+; Operation List-of-Numbers Number -> List-of-Numbers
+(define (operation/list.v1.5 op l num)
+  (cond [(string=? op "multiply") (multiply/list l num)]
+        [(string=? op "add") (add/list l num)]))
+
+;; A máme zase původní problém - dvě velmi podobné funkce!
+
+
+;; Zkusme to jinak - stejně jako jsme
+;; abstrahovali podobnosti v hodnotách uvnitř
+;; funkce.
+
+;; Definujme funkci
 
 ; ??? List-of-Number Number -> List-of-Number
 (define (operation/list.v2 op l num)
   (cond [(empty? l) '()]
-        [else (cons (op (first l) num)
-                    (operation/list.v2 op (rest l) num))]))
+        [(cons? l) (cons (op (first l) num)
+                         (operation/list.v2 op (rest l) num))]))
 
 
 ;; STOP! Zkuste vysvětlit, jaký datový typ má parametr op.
 ;; Všimněte si jak jej používáme! Má tato definice smysl?
 
+
+
+
+
 ;; V rámci BSL/BSL+ tato definice není sémanticky správná.
 ;; My se ale nyní přesuneme do ISL (Intermediate Student Language)
 ;; ve které je toto povoleno.
+
+;; Funkcím, které konzumují jiné funkce jako parametry se říká
+;; funkce vyššího řádu (higher order functions)
 
 ;; Vyzkoušejme - chceme filtrovat listy podle čísla
 ;; (vybrat sub-list menších/větších čísel než je nějáké číslo v parametru)
@@ -72,25 +115,28 @@
 ;; Vytvořme nejprve funkce smaller a larger
 
 ; Number List-of-Number -> List-of-Number
-; Vybere čísla z lon která jsou menší než num
+; Filters number smaller than num from list lon.
 (define (smaller num lon)
   (cond [(empty? lon) '()]
-        [(< (first lon) num) (cons (first lon)
-                                   (smaller num (rest lon)))]
-        [else (smaller num (rest lon))]))
+        [(cons? lon) (if (< (first lon) num)
+                         (cons (first lon)
+                               (larger num (rest lon)))
+                         (larger num (rest lon)))]))
 
 
 ; Number List-of-Number -> List-of-Number
-; Vybere čísla z lon která jsou větší než num
+; Filters number larger than num from list lon.
 (define (larger num lon)
   (cond [(empty? lon) '()]
-        [(> (first lon) num) (cons (first lon)
-                                   (larger num (rest lon)))]
-        [else (larger num (rest lon))]))
+        [(cons? lon) (if (> (first lon) num)
+                         (cons (first lon)
+                               (larger num (rest lon)))
+                         (larger num (rest lon)))]))
 
 
 ;; Nalezněte rozdíly v těchto funkcích a navrhněte abstrakci.
 ;; Abstrahovanou funkci pojmenujte extract.
+
 
 
 
@@ -101,15 +147,16 @@
 
 
 
+
 ;; Nejen že je taková definice přehlednější a kratší,
 ;; ale že můžeme definovat mnohem více "specializovaných" funkcí
 
 ; List-of-Numbers Number -> List-of-Numbers
-#; (define (equal lon num)
+#;(define (equal lon num)
   (extract = lon num))
 
 ; List-of-Numbers Number -> List-of-Numbers
-#; (define (equal-or-larger lon num)
+#;(define (equal-or-larger lon num)
   (extract >= lon num))
 
 
@@ -117,58 +164,17 @@
 ;; bude mít správnou signaturu.
 
 ; Number Number -> Boolean
-; Určí, jestli je (x*x) > c.
+; Determines if square of x is larger than c ((x*x) > c).
 (define (sqr>? x c)
   (> (* x x) c))
 
 ; List-of-Numbers Number -> List-of-Numbers
-#; (define (sqr-larger lon num)
-  (extract sqr>? lon num))
+#;(define (sqr-larger lon num)
+  (extract sqr>? num lon))
 
 
 
 ;; Abstrahované funkce jsou ve výsledku užitečnější, než specializované!
-
-;; Cvičení
-; Infimum a supremum jsou funkce na množinách, které vybírají nejmenší a
-;; největší prvek celé množiny.
-
-
-; NE-List-of-Numbers -> Number
-; Nalezne nejmenší číslo v neprázdném listu
-(check-expect (inf (list 3 2 7 1 5)) 1)
-(check-expect (inf (list 5)) 5)
-(define (inf l)
-  (cond [(empty? (rest l)) (first l)]
-        [else (if (< (first l) (inf (rest l)))
-                  (first l)
-                  (inf (rest l)))]))
-
-
-; NE-List-of-Numbers -> Number
-; Nalezne největší číslo v neprázdném listu
-(check-expect (sup (list 3 2 7 1 5)) 7)
-(check-expect (sup (list 5)) 5)
-(define (sup l)
-  (cond [(empty? (rest l)) (first l)]
-        [else (if (> (first l) (sup (rest l)))
-                  (first l)
-                  (sup (rest l)))]))
-
-
-;; Definujte funkci (pick-one op l) která bude abstrahovat tyto dvě funkce
-;; Vyzkoušejte. Zkuste popsat, jak dlouho se výraz evaluuje v závislosti na
-;; délce listu. Dokážete říct proč se funkce takhle chová?
-
-
-
-
-
-;; Přepište původní funkce za použití funkcí (min x y) a (max x y).
-;; Abstrahujte takto přepsané funkce do (pick-one.v2 op l).
-;; Proč jsou tyto funkce "rychlejší"?
-
-
 
 
 ; -----------------------------------------------------------------------------

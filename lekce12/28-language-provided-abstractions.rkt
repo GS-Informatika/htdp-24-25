@@ -1,6 +1,6 @@
 ;; The first three lines of this file were inserted by DrRacket. They record metadata
 ;; about the language level of this file in a form that our tools can easily process.
-#reader(lib "htdp-intermediate-reader.ss" "lang")((modname 27-language-provided-abstractions) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+#reader(lib "htdp-intermediate-reader.ss" "lang")((modname 28-language-provided-abstractions) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
 ; ------- VESTAVĚNÉ ABSTRAKCE -------
 
 ;; Programovací jazyky běžně obsahují velmi obecné funkce,
@@ -27,7 +27,7 @@
 #; (build-list 4 add1)
 
 ; Number -> Posn
-; Vytvoří Posn se souřadnicemi (x, 0)
+; Produces a Posn with coordinates (x, 0)
 (define (posn-on-x-axis x)
   (make-posn x 0))
 
@@ -61,7 +61,7 @@
 #; (sort '("e" "a" "xyz" "za" "zb") string<?)
 
 ; Posn Posn -> Boolean
-; Porovná složky dvou Posn
+; Compares x coordinate of posn1 and posn2 (x1 > x2)
 (define (ord>-x posn1 posn2)
   (> (posn-x posn1) (posn-x posn2)))
 

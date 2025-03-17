@@ -10,12 +10,12 @@
 
 ;; Porovnejte následující definice dat
 
-; List-of-Numbers je jedno z:
+; List-of-Numbers is one of:
 ; - '()
 ; - (cons Number List-of-Numbers)
 
 
-; List-of-Strings je jedno z:
+; List-of-Strings is one of:
 ; - '()
 ; - (cons String List-of-Strings)
 
@@ -26,9 +26,10 @@
 ;; U datových definic ale nemáme argumenty jako u funkcí!
 ;; Zatím ...
 
-; [List-of T] je jedno z:
+; [List-of T] is one of:
 ; - '()
 ; - (cons T [List-of T])
+
 
 ;; Takové definici říkáme "parametrická definice dat"
 ;; Nyní můžeme dvě předchozí definice (a spoustu dalších)
@@ -38,7 +39,7 @@
 ;; datové typy ve své signatuře.
 
 
-; [NE-List-of T] je jedno z:
+; [NE-List-of T] is one of:
 ; - (cons T '())
 ; - (cons T [NE-List-of T])
 
@@ -47,13 +48,14 @@
 (check-expect (find-max '(1 5 2)) 5)
 (define (find-max l)
   (cond [(empty? (rest l)) (first l)]
-        [else (max (first l) (find-max (rest l)))]))
+        [(cons? (rest l)) (max (first l) (find-max (rest l)))]))
 
 
 (define-struct pair [left right])
-; [Pair L R] je struktura:
+; [Pair L R] is a struct:
 #; (make-pair L R)
-; Obsahuje dvojici hodnot, left a right.
+; Contains a pair of values - left and right.
+
 
 ;; -------------------------------------------------------------------
 ;;   Procvičování: Napište funkce pracující nad konkrétními realizacemi
@@ -100,48 +102,4 @@
 ; -------------------------------------------------------------------
 
 
-;; Funkce mohou pracovat i nad "generickými" (tj. nekonkretizovanými)
-;; parametrickými datovými typy. Takové funkce jsou většinou výsledkem
-;; abstrakce.
 
-;; Nejprve zapíšeme které parametry budeme používat v naší definici,
-;; dále zapíšeme signaturu
-
-
-; [T]: [T -> Boolean] [List-of T] -> [List-of T]
-; Vybere z listu prvky splňující predikát
-(check-expect (filter-list positive? (list -2 0 4 7 -3)) (list 4 7))
-(define (filter-list predicate list-of-values)
-  (cond [(empty? list-of-values) '()]
-        [(cons? list-of-values)
-         (if (predicate (first list-of-values))
-             (cons (first list-of-values)
-                   (filter-list predicate (rest list-of-values)))
-             (filter-list predicate (rest list-of-values)))]))
-
-
-;; Funkce predicate má datový typ (T -> Boolean).
-;; Při konkrétním použití funkce pak musíme dbát na stejnost všech výskytů typu T.
-
-;; Ppokud funkci filter-list použijeme na [List-of Number], pak funkce predicate
-;; musí mít signaturu (Number -> Boolean) a výsledkem bude Number.
-
-;; Pokud ji použijeme na [List-of String], za predicate zase musíme doplňit
-;; funkci, která z hodnoty String vytvoří Boolean, tedy (String -> Boolean).
-;; Výsledkem pak bude Boolean.
-
-
-;; Je dobré si uvědomit, že signatura funkce je vlastně definice datového typu dané funkce!
-
-;; Další ukázka:
-
-
-; [T1 T2]: [T1 -> T2] [List-of T1] -> [List-of T2]
-; Převede prvky listu list-of-values pomocí mapující funkce fn
-(define (map-list fn list-of-values)
-  (cond [(empty? list-of-values) '()]
-        [else (cons (fn (first list-of-values)) (map-list fn (rest list-of-values)))]))
-
-
-;; Určete, jaké parametry má tato definice. Vymyslete nějákou konkrétní realizaci
-;; této hodnoty (tj. napište nějákou konkretizaci funkce a napište její signaturu)
