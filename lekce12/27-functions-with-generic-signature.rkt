@@ -22,11 +22,16 @@
                    (filter-list predicate (rest list-of-values)))
              (filter-list predicate (rest list-of-values)))]))
 
+; [List-of Number] -> [List-of Number]
+(define (filter-positive l)
+  (filter-list positive? l))
 
 ;; Funkce predicate má datový typ (T -> Boolean).
-;; Při konkrétním použití funkce pak musíme dbát na stejnost všech výskytů typu T.
+;; Při konkrétním použití funkce pak musíme dbát na stejnost
+;; všech výskytů typu T.
 
-;; Pokud funkci filter-list použijeme na [List-of Number], pak funkce predicate
+;; Pokud funkci filter-list použijeme na [List-of Number],
+;; pak funkce predicate
 ;; musí mít signaturu (Number -> Boolean) a výsledkem bude Number.
 
 ;; Pokud ji použijeme na [List-of String], za predicate zase musíme doplňit
@@ -34,7 +39,8 @@
 ;; Výsledkem pak bude Boolean.
 
 
-;; Je dobré si uvědomit, že signatura funkce je vlastně definice datového typu dané funkce!
+;; Je dobré si uvědomit, že signatura funkce je
+;; vlastně definice datového typu dané funkce!
 
 ;; Další ukázka:
 

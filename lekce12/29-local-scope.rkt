@@ -37,9 +37,10 @@
 
 
 ; PersonAddress -> String
-; Creates representation of person from address ("Name Surname")
+; Creates representation of person from address ("[Name Surname]")
 (define (person-name addr)
-  (string-append "[" (address-first-name addr) " " (address-last-name addr) "]"))
+  (string-append "[" (address-first-name addr) " "
+                 (address-last-name addr) "]"))
 
 
 (define example0
@@ -49,7 +50,7 @@
         (make-address "Caiden" "Liu" "Dělnická")
         (make-address "Robyn" "Cobb" "Jankovcova")))
 
-#; (names example0)
+#;(names example0)
 
 
 ;; Funkce name<? a string-append-with-space zřejmě nebudou mít význam mimo
@@ -83,15 +84,16 @@
           (define sorted (sort l name<?))
           ; 2. Extrakce jmen
           ; [List-of String]
-          (define names (map person-name sorted)))
-    
-    (foldr helper "" names)))
+          (define names (map person-name sorted))
+          (define result (foldr helper "" names)))
+    result
+    ))
 
-#; (names.v2 example0)
+#;(names.v2 example0)
 
 ;; Lokálně definovanou hodnotu můžeme použít pouze uvnitř bloku local
 
-#; (local (
+#;(local (
         (define x 5)
         (define y (+ x 5))
         )
@@ -100,10 +102,10 @@
 
 ;; Lokální definice "stíní" nadřazené definice
 (define x 5)
-#; (local ((define x 10))
-  (local ((define x 20))
-    x))
-
+#;(local (
+        (define y 5))
+  (+ x (local ((define x 20))
+    (+ x y))))
 
 ;; Lokální definice nám také umožňují snížit zanoření výrazů - můžeme
 ;; postupně vytvářet mezihodnoty!
@@ -118,7 +120,6 @@
                   (first list)
                   (slow-pick-one op (rest list)))]))
 
-
 ; [T]: [T T -> Boolean] [NE-List-of T] -> T
 (define (fast-pick-one op list)
   (cond [(empty? (rest list)) (first list)]
@@ -128,9 +129,10 @@
                     picked))]))
 
 
-(define test-list '(5 8 7 1 6 8 7 6 3 41 9 4 1 32 8 4  12 56 32 12 8 10 9 1 6 16))
-#; (slow-pick-one > test-list)
-#; (fast-pick-one > test-list)
+(define test-list '(5 8 7 1 6 8 7 6 3 41 9
+                      4 1 32 8 4 12 56 32 12 8 10 9 1 6 16))
+(time (slow-pick-one > test-list))
+(time (fast-pick-one > test-list))
 
 
 ;; ------ Cvičení ------
@@ -160,75 +162,3 @@
 
 
 
-
-; ----------------------
-
-
-;; Lokální definice nám také umožňují vytvářet funkce!
-;; Ukázka - vytvoření predikátu z dat
-
-(require 2htdp/image)
-
-(define-struct circleS (center radius color))
-; Circle is a struct
-#; (make-circleS Posn Number Color)
-
-
-; Circle Image -> Image
-; Adds a circle c to image
-(define (place-circle c image)
-  (place-image (circle (circleS-radius c) 'outline (circleS-color c))
-               (posn-x (circleS-center c)) (posn-y (circleS-center c))
-               image))
-
-
-; Posn Image -> Image
-; Adds a dot to image on posn p
-(define (place-dot p image)
-  (place-image (circle 2 'solid 'red)
-               (posn-x p) (posn-y p)
-               image))
-
-
-; Posn Number -> (Posn -> Boolean)
-(define (mk-is-inside-circle circle)
-  (local (; Posn Posn -> Number
-          ; Determines square of euclidean distance from posn1 to posn2
-          (define (distance-sqr posn1 posn2)
-            (+ (sqr (- (posn-x posn1) (posn-x posn2)))
-               (sqr (- (posn-y posn1) (posn-y posn2)))))
-          ; Posn -> Boolean
-          ; Determines if distance of posn from circle center is less than radius
-          (define (pred posn)
-            (> (sqr (circleS-radius circle)) (distance-sqr (circleS-center circle) posn))))
-    pred))
-
-
-(define circle1 (make-circleS (make-posn 50 50) 30 "red"))
-(define circle2 (make-circleS (make-posn 50 60) 38 "blue"))
-(define circle3 (make-circleS (make-posn 40 30) 24 "green"))
-
-(define p1 (make-posn 23 25))
-(define p2 (make-posn 31 40))
-
-; Image
-(define IMG (foldl place-circle
-                   (empty-scene 120 120)
-                   (list circle1 circle2 circle3)))
-
-; Image
-(define WITH-DOTS (foldl place-dot IMG (list p1 p2)))
-
-; Posn -> Boolean
-(define in-circle1? (mk-is-inside-circle circle1))
-
-; Posn -> Boolean
-(define in-circle2? (mk-is-inside-circle circle2))
-
-#; WITH-DOTS
-#; (in-circle1? p1)
-#; (in-circle2? p1)
-#; ((mk-is-inside-circle circle3) p1)
-
-;; Takto vytvořeným funkcím se také říká "closure".
-;; Uzavírají hodnoty proměnných předané z vnější funkce.
