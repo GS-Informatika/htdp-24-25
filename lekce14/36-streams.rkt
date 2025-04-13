@@ -1,6 +1,6 @@
 ;; The first three lines of this file were inserted by DrRacket. They record metadata
 ;; about the language level of this file in a form that our tools can easily process.
-#reader(lib "htdp-intermediate-lambda-reader.ss" "lang")((modname 34-streams) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+#reader(lib "htdp-advanced-reader.ss" "lang")((modname 34-streams) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #t #t none #f () #f)))
 ;; Listy mohou obsahovat nekonečný počet hodnot jen teoreticky,
 ;; v realitě jsme omezeni pamětí runtime a náročností
 ;; vytvoření listu.
@@ -94,7 +94,7 @@
 ; Number -> [ConsStream T]
 ; Infinite stream of numbers starting at start.
 (define (numbers start)
-  (make-stream start (lambda (_) ; ISL nedovoluje funkce bez parametru
+  (make-stream start (lambda ()
                        (numbers (add1 start)))))
 
 #;(numbers 1)
@@ -105,7 +105,7 @@
 
 ; [T]: [ConsStream T] -> [Stream T]
 (define (stream-rest stream)
-  ((stream-rest-delayed stream) 0))
+  ((stream-rest-delayed stream)))
 
 #; (stream-rest (numbers 1))
 
@@ -125,7 +125,7 @@
         [(empty? stream) '()]
         [else (make-stream
                (stream-first stream)
-               (lambda (_) (stream-take (sub1 n)
+               (lambda () (stream-take (sub1 n)
                                         (stream-rest stream))))]))
 #;(stream->list
  (stream-take 10 (numbers 5)))
