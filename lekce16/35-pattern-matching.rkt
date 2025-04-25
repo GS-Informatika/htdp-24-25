@@ -3,7 +3,7 @@
 #reader(lib "htdp-intermediate-lambda-reader.ss" "lang")((modname 33-pattern-matching) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
 ;; PATTERN MATCHING
 
-;; Modul 2htdp/abstraction
+;; Modul
 (require 2htdp/abstraction)
 ;; kromě syntaxe pro iterace obsahuje
 ;; i syntax pro tzv. pattern matching.
@@ -90,4 +90,10 @@
         (sqrt (+ (sqr (- x1 x2))
                  (sqr (- y1 y2))))])]))
                     
+
+;; Cvičení
+;; 1) Pomocí pattern matchingu napište funkci, která určí
+;;    poslední hodnotu v [Non-Empty-List-of T].
+
+
 

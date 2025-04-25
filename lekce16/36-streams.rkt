@@ -1,6 +1,6 @@
 ;; The first three lines of this file were inserted by DrRacket. They record metadata
 ;; about the language level of this file in a form that our tools can easily process.
-#reader(lib "htdp-advanced-reader.ss" "lang")((modname 34-streams) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #t #t none #f () #f)))
+#reader(lib "htdp-advanced-reader.ss" "lang")((modname 36-streams) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #t #t none #f () #f)))
 ;; Listy mohou obsahovat nekonečný počet hodnot jen teoreticky,
 ;; v realitě jsme omezeni pamětí runtime a náročností
 ;; vytvoření listu.
@@ -62,13 +62,15 @@
              [idx (in-naturals 0)])
     (make-pair idx item)))
 
+; [T A]: (T -> A) T -> Void
+; Calculate and throw result away
 (define (no-eval1 fn arg)
   (local ((define throw-away (fn arg)))
-    #f))
+    void))
 
 (define A-LIST (build-list 10000000 id))
-#; (time (no-eval1 enumerate.v1 A-LIST))
-#; (time (no-eval1 enumerate.v2 A-LIST))
+(time (no-eval1 enumerate.v1 A-LIST))
+(time (no-eval1 enumerate.v2 A-LIST))
 
 ;; Vestavěné streamy typicky umožňují runtime
 ;; provádět optimalizace.
@@ -79,17 +81,20 @@
 ;; ale umožňí konstruovat sekvence hodnot které
 ;; by se v listu do paměti nevešly.
 
+;; Pro implementaci dočasně přejdeme do jazyka ASL,
+;; budeme totiž potřebovat funkce které nekonzumují
+;; žádnou hodnotu.
+
 
 ; [ConsStream T] is a struct
-#; (make-stream T (Any -> [ConsStream T]))
+#; (make-stream T (-> [ConsStream T]))
 (define-struct stream [first rest-delayed])
 
 ;; Struktura streamu je podobná struktuře listu
 ;; V "rest" poli ale nemáme přímo zbytek streamu,
 ;; ale funkci která zbytek streamu vytvoří.
 ;; Tato funkce pak musí obsahovat data nutná pro
-;; vygenerování další hodnoty, ne hodnoty
-;; celého zbytku streamu.
+;; vygenerování zbytku streamu.
 
 ; Number -> [ConsStream T]
 ; Infinite stream of numbers starting at start.
@@ -147,9 +152,26 @@
 
 
 ;; Cvičení
-;; Inspirujte se ukázkou implementace funkcí map
-;; a filter pro listy z minulých lekcí.
-;; Nadesignujte funkce stream-map a filter-map.
+;; 1) Nadesignujte funkci, která vytvoří stream
+;;    sudých (even) čísel větších než n.
+
+
+
+
+;; 2) Nadesignujte funkci, která vytvoří cyklický
+;;    stream čísel od start do end:
+;;    (cycle 0 2) bude postupně vytvářet hodnoty
+;;    0, 1, 2, 0, 1, 2, 0, 1, 2.
+;;    Hint: budete potřebovat lokální prostředí
+;;    a pomocnou funkci která bude konzumovat
+;;    momentální stav.
+
+
+
+
+;; 3) Inspirujte se ukázkou implementace funkcí map
+;;    a filter pro listy z minulých lekcí.
+;;    Nadesignujte funkce stream-map a filter-map.
 
 
 

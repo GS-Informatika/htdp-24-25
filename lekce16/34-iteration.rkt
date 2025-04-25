@@ -135,3 +135,16 @@
 
 ;; a jejich for*/ ... alternativy
 
+
+;; Cvičení
+;; 1) Nadesignujte pomocí loopů funkci, která vytvoří
+;;    list čísel (list 0 1 ... n-1) pro Nat n.
+
+
+
+
+;; 2) Nadesignujte pomocí loopů funkci, která vytvoří
+;;    list prvních n sudých (even) čísel.
+
+
+
