@@ -54,15 +54,15 @@
 ; - "F"
 
 (define-struct op-or [left right])
-; OpOr is a struct:
-#; (make-op-or Expression Expression)
+; [OpOr E] is a struct:
+#; (make-op-or E E)
 
 ; Expression is one of:
 ; - Literal
-; - OpOr
+; - [OpOr Expression]
 ;; AST of Boolean expression
 
-(define or1 (make-op-or "T" "F"))
+(define expr1 (make-op-or "T" "F"))
 
 ;; Tato reprezentace se k "or"
 ;; chová jako k čistě binárnímu
@@ -74,14 +74,14 @@
 #; (or
     (or #t #f)
     (or #f #f))
-
-
+#;(define expr2 ...)
 
 
 #; (or
     (or #f
         (or #f #f))
     #t)
+#;(define expr3 ...)
 
 
 ;; Dále zavedeme predikát určující jestli je
@@ -89,17 +89,24 @@
 ;; složeným výrazem)
 
 ; Expression -> Boolean
+(check-expect (literal? "T") #t)
+(check-expect (literal? "F") #t)
+(check-expect (literal? expr1) #f)
 (define (literal? e)
   (and (string? e)
        (or (string=? e "T")
            (string=? e "F"))))
 
 
-;; A predikát určující jestli je literál True
+;; A predikát určující jestli je literál True nebo False
 
 ; Literal -> Boolean
-(define (is-true? l)
+(define (literal-true? l)
   (string=? l "T"))
+
+; Literal -> Boolean
+(define (literal-false? l)
+  (string=? l "F"))
 
 
 ;; Cvičení
@@ -108,7 +115,8 @@
 ; Expression -> Literal
 (check-expect (eval "T") "T")
 (check-expect (eval "F") "F")
-#;(check-expect (eval or1) #T)
+#;(check-expect (eval expr1) "T")
+#;(check-expect (eval expr3) "T")
 (define (eval expr)
   (cond [(literal? expr) expr]
         [(op-or? expr) (eval-or expr)]))
@@ -121,14 +129,15 @@
 ;; prostředí pro rekurzi nejdříve po
 ;; levé větvi, poté po pravé.
 
-; OpOr -> Literal
+; [OpOr Expression] -> Literal
 (define (eval-or expr)
   ...)
 
 
 
+
 ;; Funkce eval je interpret boolovských
-;; výrazů
+;; výrazů s or
 
 ;; Při práci s booleany využíváme další
 ;; operátory:
@@ -140,32 +149,30 @@
 ;; Expression.
 
 (define-struct op-and [left right])
-; OpAnd is a struct:
-#; (make-op-and Expression Expression)
+; [OpAnd E] is a struct:
+#; (make-op-and E E)
 
 (define-struct op-not [inner])
-; OpNot is a struct:
-#; (make-op-not Expression)
+; [OpNot E] is a struct:
+#; (make-op-not E)
 
 ; Expression.v2 is one of:
 ; - Literal
-; - OpOr
-; - OpAnd
-; - OpNot
+; - [OpOr Expression.v2]
+; - [OpAnd Expression.v2]
+; - [OpNot Expression.v2]
 ;; AST of Boolean expression
 
 ;; Cvičení
 ;; Převeďte výrazy na AST reprezentaci
 #; (and (or #t #f)
         (or #f #f))
+#;(define expr4 ...)
 
-
-
-
-#; (not (and (and #t #f)
-             (not (or #f #f))))
-
-
+#; (not
+    (and (and #t #f)
+         (not (or #f #f))))
+#;(define expr5 ...)
 
 
 ;; Cvičení
@@ -177,21 +184,24 @@
 
 
 ; Expression.v2 -> Literal
+#;(check-expect (eval.v2 "T") "T")
+#;(check-expect (eval.v2 "F") "F")
+#;(check-expect (eval.v2 expr4) "F")
+#;(check-expect (eval.v2 expr5) "T")
 (define (eval.v2 expr)
   ...)
 
-; OpOr -> Literal
+; [OpOr Expression.v2] -> Literal
 (define (eval-or.v2 expr)
   ...)
 
-; OpAnd -> Literal
+; [OpAnd Expression.v2] -> Literal
 (define (eval-and.v2 expr)
   ...)
 
-; OpNot -> Literal
+; [OpNot Expression.v2] -> Literal
 (define (eval-not.v2 expr)
   ...)
-
 
 
 ;; AST reprezentaci můžeme využít i
@@ -207,19 +217,26 @@
 ;; které se provádí. Každou aplikaci
 ;; operace uzávorkujte.
 ;; Příklad:
-#; (or
+(define expr6 (make-op-and (make-op-or "T" "F")
+                          (make-op-or "F" "F")))
+#; (and
     (or #t #f)
     (or #f #f))
 ;; se převede na
-#; "((T or F) or (T or F))"
+#; "((T or F) and (F or F))"
 
+
+(define expr7 (make-op-not (make-op-or "T" "T")))
 #; (not (or #t #t))
 ;; se převede na
-#; "(NOT (T or T))"
+#; "(not (T or T))"
 
 
-
-
+; Expression.v2 -> String
+#;(check-expect (ast->string expr6) "((T or F) and (F or F))")
+#;(check-expect (ast->string expr7) "(not (T or T))")
+(define (ast->string expr)
+  ...)
 
 
 ;; AST dále můžeme využít při
@@ -247,10 +264,16 @@
 ; Expression.v2 -> Expression.v2
 ; "double-not is identity" optimization pass
 (check-expect (optimize/double-not "T") "T")
-(check-expect (optimize/double-not or1) or1)
+(check-expect (optimize/double-not expr1) expr1)
 (check-expect (optimize/double-not
-               (make-op-not (make-op-not or1)))
-              or1)
+               (make-op-not (make-op-not expr1)))
+              expr1)
+(check-expect (optimize/double-not
+               (make-op-not (make-op-not (make-op-not expr1))))
+              (make-op-not expr1))
+(check-expect (optimize/double-not
+               (make-op-not (make-op-not (make-op-not (make-op-not expr1)))))
+              expr1)
 (check-expect (optimize/double-not
                (make-op-and (make-op-not (make-op-not "T"))
                             (make-op-not "F")))
@@ -268,7 +291,7 @@
                    (make-op-or (optimize (op-or-left expr))
                                (optimize (op-or-right expr)))]))
           
-          ; NotOp -> Expression.v2
+          ; [OpNot Expression.v2] -> Expression.v2
           ; If inner is op-not returns optimized inner of inner
           ; If inner is not op-not, returns optimized
           (define (remove-double expr)
@@ -291,9 +314,9 @@
 ; Expression.v3 is one of:
 ; - Literal
 ; - Variable
-; - OpOr
-; - OpAnd
-; - OpNot
+; - [OpOr Expression.v3]
+; - [OpAnd Expression.v3]
+; - [OpNot Expression.v3]
 ;; AST of Boolean expression
 
 
@@ -323,7 +346,7 @@
 (define env1 (list (make-binding "x" "T")
                    (make-binding "y" "F")))
 
-(define expr1 (make-op-and (make-op-not (make-variable "x"))
+(define expr8 (make-op-and (make-op-not (make-variable "x"))
                            (make-op-or (make-variable "y")
                                        "T")))
 
@@ -345,11 +368,14 @@
         [(op-or? expr)
          (eval-or.v3 env expr)]))
 
+; Environment.v3 [OpNot Expression.v3] -> Literal
 (define (eval-not.v3 env expr)
   ...)
 
+; Environment.v3 [OpAnd Expression.v3] -> Literal
 (define (eval-and.v3 env expr)
   ...)
 
+; Environment.v3 [OpOr Expression.v3] -> Literal
 (define (eval-or.v3 env expr)
   ...)
