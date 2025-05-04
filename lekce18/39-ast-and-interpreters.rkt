@@ -201,7 +201,7 @@
 
 ;; Cvičení
 
-;; Nadesignujte funkci print-ast,
+;; Nadesignujte funkci ast->string,
 ;; která převede AST reprezentaci
 ;; na string reprezentující operace
 ;; které se provádí. Každou aplikaci
